@@ -1,5 +1,5 @@
 module board_registers(input logic clk, input logic reset, input logic w_e,
-                        input logic [3:0] position, input logic [1:0]player_value,
+                        input logic [3:0] position, input logic [1:0] player_value,
                         output logic [17:0] board_state);
 
 
