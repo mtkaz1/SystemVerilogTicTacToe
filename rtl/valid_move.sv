@@ -16,5 +16,6 @@ module valid_move( input logic [3:0] position,
                                 4'b0110: valid = (board_state[13:12] == 2'b00) ? 1'b1 : 1'b0; //block 7 on the board
                                 4'b0111: valid = (board_state[15:14] == 2'b00) ? 1'b1 : 1'b0; //block 8 on the board
                                 4'b1000: valid = (board_state[17:16] == 2'b00) ? 1'b1 : 1'b0; //block 9 on the board
-                                default: valid = 'bx; //If position isn't valid, we treat it as a floating
-                                
+                                default: valid = 1'b0;
+                            endcase
+endmodule
