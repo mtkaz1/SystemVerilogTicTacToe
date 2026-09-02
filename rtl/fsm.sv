@@ -21,41 +21,62 @@ module fsm(input logic clk, input logic start, input logic reset, input logic mo
 
         always_comb
             begin
-                case(state)
-                    IDLE:
-                        begin
-                            if(start)
-                                next_state = PLAYER1;
-                            else
+
+                player_value = 2'b00;
+                w_e = 1'b0;
+                game_done = 1'b0;
+                    case(state)
+                        IDLE:
+                            begin
+                                if(start)
+                                    next_state = PLAYER1;
+                                else
+                                    next_state = IDLE;
+                            end
+                        
+                        PLAYER1:
+                            begin
+                                player_value = 2'b01;
+
+                                if(win || draw)
+                                    next_state = GAME_DONE;
+                                else if(move_req && valid)
+                                    begin
+                                    w_e = 1'b1;
+                                    next_state = PLAYER2;
+                                    end
+                                else
+                                    next_state = PLAYER1;
+                            end
+                        
+                        PLAYER2:    
+                            begin
+                               player_value = 2'b10;
+
+                                if(win || draw)
+                                    next_state = GAME_DONE; 
+                                else if(move_req && valid)
+                                    begin
+                                        w_e = 1'b1;
+                                        next_state = PLAYER1;
+                                    end
+                                else
+                                    next_state = PLAYER2;
+                            end
+                        
+                        GAME_DONE:
+                            begin
+                                game_done = 1'b1;
+
+                                if(reset)
+                                    next_state = IDLE;
+                                else
+                                    next_state = GAME_DONE;
+                    
+                            end
+                            
+                            default:
                                 next_state = IDLE;
-                        end
-                    
-                    PLAYER1:
-                        begin
-                            if(win || draw)
-                                next_state = GAME_DONE;
-                            else if(move_req && valid)
-                                next_state = PLAYER2;
-                            else
-                                next_state = PLAYER1;
-                        end
-                    
-                    PLAYER2:    
-                        begin
-                            if(win || draw)
-                                next_state = GAME_DONE; 
-                            else if(move_req && valid)
-                                next_state = PLAYER1;
-                            else
-                                next_state = PLAYER2;
-                        end
-                    
-                    GAME_DONE:
-                        begin
-                            if(reset)
-                                next_state = IDLE;
-                            else
-                                next_state = GAME_DONE;
-                        end
-                endcase
-endmodule
+                    endcase
+                end
+    endmodule
